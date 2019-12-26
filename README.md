@@ -1,5 +1,4 @@
-cw
-==
+# cw
 
 Cryptowerk CLI
 
@@ -9,11 +8,15 @@ Cryptowerk CLI
 [![License](https://img.shields.io/npm/l/cw.svg)](https://github.com/i001962/cw/blob/master/package.json)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+
+- [Usage](#usage)
+- [Commands](#commands)
+  <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g cw
 $ cw COMMAND
@@ -25,17 +28,21 @@ USAGE
   $ cw COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
-* [`cw config`](#cw-config)
-* [`cw hash [FILE]`](#cw-hash-file)
-* [`cw help [COMMAND]`](#cw-help-command)
-* [`cw register [HASH]`](#cw-register-hash)
-* [`cw retrieve`](#cw-retrieve)
-* [`cw start`](#cw-start)
-* [`cw store`](#cw-store)
-* [`cw verify`](#cw-verify)
+
+- [`cw config`](#cw-config)
+- [`cw hash [FILE]`](#cw-hash-file)
+- [`cw help [COMMAND]`](#cw-help-command)
+- [`cw register [HASH]`](#cw-register-hash)
+- [`cw retrieve`](#cw-retrieve)
+- [`cw start`](#cw-start)
+- [`cw store`](#cw-store)
+- [`cw verify`](#cw-verify)
 
 ## `cw config`
 
@@ -50,8 +57,8 @@ OPTIONS
 
 DESCRIPTION
   Prompts to Setup .env file for:
-     APIKEY= 
-     APICRED=  
+     APIKEY=
+     APICRED=
      ENDPOINT= e.g. https://developers.cryptowerk.com/platform/API/v8/
      Visit http://developer.cryptowerk.com to register.
 ```
@@ -93,7 +100,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3
 
 ## `cw register [HASH]`
 
-Register hash(es) to several blockchains 
+Register hash(es) to several blockchains
 
 ```
 USAGE
@@ -106,8 +113,8 @@ OPTIONS
                More than one hash? Seperate with comma no spaces.
 
 DESCRIPTION
-  Register hash(es) to several blockchains 
-       and obtain retrievalID. 
+  Register hash(es) to several blockchains
+       and obtain retrievalID.
        Us verify command for a link to proof.
 ```
 
@@ -143,17 +150,6 @@ OPTIONS
 
 _See code: [src/commands/start.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/start.ts)_
 
-## `cw store`
-
-Select a seal
-
-```
-USAGE
-  $ cw store
-```
-
-_See code: [src/commands/store.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/store.ts)_
-
 ## `cw verify`
 
 Verify hash with Seal
@@ -172,4 +168,5 @@ DESCRIPTION
 ```
 
 _See code: [src/commands/verify.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/verify.ts)_
+
 <!-- commandsstop -->
