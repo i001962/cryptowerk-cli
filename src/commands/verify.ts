@@ -83,7 +83,9 @@ export default class Verify extends Command {
               seals.push(me.documents[j].seal);
             }
             console.log(seals);
-            console.log(`Verifying doc hash below against seal above`);
+            console.log(
+              `Verifying doc hash against seal. See above, Results below.`
+            );
             cwapi
               .verify(
                 seals,
@@ -97,6 +99,9 @@ export default class Verify extends Command {
                   "Seal and hash verified: " +
                     JSON.stringify(retval.verificationResults[0].verified)
                 );
+              })
+              .catch(function() {
+                console.log("verificationResults not found.");
               });
           } else console.log("Seal not ready. Have you retrieved it?");
         });

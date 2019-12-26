@@ -18,7 +18,7 @@ Cryptowerk CLI
 <!-- usage -->
 
 ```sh-session
-$ npm install -g cw
+$ yarn add cw
 $ cw COMMAND
 running command...
 $ cw (-v|--version|version)
@@ -41,12 +41,13 @@ USAGE
 - [`cw register [HASH]`](#cw-register-hash)
 - [`cw retrieve`](#cw-retrieve)
 - [`cw start`](#cw-start)
-- [`cw store`](#cw-store)
 - [`cw verify`](#cw-verify)
 
 ## `cw config`
 
 Prompts to Setup .env file for:
+API Keys and Endpoint
+Get your keys at Cryptowerk.com
 
 ```
 USAGE
@@ -67,7 +68,7 @@ _See code: [src/commands/config.ts](https://github.com/i001962/cw/blob/v0.0.0/sr
 
 ## `cw hash [FILE]`
 
-describe the command here
+Asks user to select a file from the /docs folder. The file will be hashed and registered. A new file suffixed wtih _orginal-file-name_\_seal.json will be created.
 
 ```
 USAGE
@@ -114,15 +115,14 @@ OPTIONS
 
 DESCRIPTION
   Register hash(es) to several blockchains
-       and obtain retrievalID.
-       Us verify command for a link to proof.
+       and obtain retrievalID. *orginal-file-name* will be suffixed with _seal.json This new file will be used to poll for newer editions of the seal as blockchains heartbeats commit data. Us verify command for a link to proof.
 ```
 
 _See code: [src/commands/register.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/register.ts)_
 
 ## `cw retrieve`
 
-Retrieve Seals as link to proofs on several blockchains
+Retrieve Seal details that include a proof per blockchain. This command polls the API useing the retrievalID returned from the Hash & Register commands.
 
 ```
 USAGE
@@ -133,7 +133,7 @@ OPTIONS
   -r, --retrieve=retrieve  Poll for Seals using retrievalIDs.
 
 DESCRIPTION
-  Retrieve Seals as link to proofs on several blockchains
+  Retrieve Seal that contains proofs. The proofs act as link to source of truth on various blockchains. The *orginal-file-name* will be suffixed with _seal.json This new file is used to poll for newer editions of the seal as blockchains heartbeats commit data.
 ```
 
 _See code: [src/commands/retrieve.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/retrieve.ts)_
@@ -160,11 +160,11 @@ USAGE
 
 OPTIONS
   -h, --help       show CLI help
-  -s, --seal=seal  Verify hashes with Seals.
-  --hash=hash      Verify hashes with Seals.
+  -s, --seal=seal  Seal object
+  --hash=hash      Hash of document for which you want to prove integrity.
 
 DESCRIPTION
-  Verify hash with Seal
+  Verify a document's integrity. The CLI will take a _seal.json file as input and confirm it hasBeenInsertedIntoAtLeastOneBlockchain. This command will automatically locate the 'original' document in the /docs folder with the same name. The document will be hashed and verified using the seal. If you change the 'original' document verifiy will return false.
 ```
 
 _See code: [src/commands/verify.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/verify.ts)_
