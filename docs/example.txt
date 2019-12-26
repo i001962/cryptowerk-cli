@@ -1,0 +1,3 @@
+Put files in the /docs folder.
+
+Select a file to hash, register, retrieve seal and verify.
