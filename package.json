@@ -6,7 +6,7 @@
   "bin": {
     "cw": "./bin/run"
   },
-  "bugs": "https://github.com/i001962/crpytowerk-cli/issues",
+  "bugs": "https://github.com/i001962/cryptowerk-cli/issues",
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
@@ -40,7 +40,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/i001962/crpytowerk-cli",
+  "homepage": "https://github.com/i001962/cryptowerk-cli",
   "keywords": [
     "oclif"
   ],
@@ -54,7 +54,7 @@
       "@oclif/plugin-not-found"
     ]
   },
-  "repository": "i001962/crpytowerk-cli",
+  "repository": "i001962/cryptowerk-cli",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
