@@ -8,46 +8,41 @@ Cryptowerk CLI
 [![License](https://img.shields.io/npm/l/cw.svg)](https://github.com/i001962/cw/blob/master/package.json)
 
 <!-- toc -->
-
-- [Usage](#usage)
-- [Commands](#commands)
-  <!-- tocstop -->
+* [cw](#cw)
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
-$ yarn add cw
+$ npm install -g cw
 $ cw COMMAND
 running command...
 $ cw (-v|--version|version)
-cw/0.0.0 darwin-x64 node-v10.16.3
+cw/0.0.1 darwin-x64 node-v10.16.3
 $ cw --help [COMMAND]
 USAGE
   $ cw COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`cw config`](#cw-config)
-- [`cw hash [FILE]`](#cw-hash-file)
-- [`cw help [COMMAND]`](#cw-help-command)
-- [`cw register [HASH]`](#cw-register-hash)
-- [`cw retrieve`](#cw-retrieve)
-- [`cw start`](#cw-start)
-- [`cw verify`](#cw-verify)
+* [`cw config`](#cw-config)
+* [`cw hash`](#cw-hash)
+* [`cw help [COMMAND]`](#cw-help-command)
+* [`cw register [HASH]`](#cw-register-hash)
+* [`cw retrieve`](#cw-retrieve)
+* [`cw start`](#cw-start)
+* [`cw verify`](#cw-verify)
 
 ## `cw config`
 
 Prompts to Setup .env file for:
-API Keys and Endpoint
-Get your keys at Cryptowerk.com
 
 ```
 USAGE
@@ -58,29 +53,27 @@ OPTIONS
 
 DESCRIPTION
   Prompts to Setup .env file for:
-     APIKEY=
-     APICRED=
+     APIKEY= 
+     APICRED=  
      ENDPOINT= e.g. https://developers.cryptowerk.com/platform/API/v8/
      Visit http://developer.cryptowerk.com to register.
 ```
 
-_See code: [src/commands/config.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/config.ts)_
+_See code: [src/commands/config.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/config.ts)_
 
-## `cw hash [FILE]`
+## `cw hash`
 
-Asks user to select a file from the /docs folder. The file will be hashed and registered. A new file suffixed wtih _orginal-file-name_\_seal.json will be created.
+Select a doc to hash and register
 
 ```
 USAGE
-  $ cw hash [FILE]
+  $ cw hash
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
-_See code: [src/commands/hash.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/hash.ts)_
+_See code: [src/commands/hash.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/hash.ts)_
 
 ## `cw help [COMMAND]`
 
@@ -101,7 +94,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3
 
 ## `cw register [HASH]`
 
-Register hash(es) to several blockchains
+Register hash(es) to several blockchains 
 
 ```
 USAGE
@@ -114,41 +107,38 @@ OPTIONS
                More than one hash? Seperate with comma no spaces.
 
 DESCRIPTION
-  Register hash(es) to several blockchains
-       and obtain retrievalID. *orginal-file-name* will be suffixed with _seal.json This new file will be used to poll for newer editions of the seal as blockchains heartbeats commit data. Us verify command for a link to proof.
+  Register hash(es) to several blockchains 
+       and obtain retrievalID. 
+       Us verify command for a link to proof.
 ```
 
-_See code: [src/commands/register.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/register.ts)_
+_See code: [src/commands/register.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/register.ts)_
 
 ## `cw retrieve`
 
-Retrieve Seal details that include a proof per blockchain. This command polls the API useing the retrievalID returned from the Hash & Register commands.
+Retrieve Seals as link to proofs on several blockchains
 
 ```
 USAGE
   $ cw retrieve
 
 OPTIONS
-  -h, --help               show CLI help
-  -r, --retrieve=retrieve  Poll for Seals using retrievalIDs.
+  -h, --help  show CLI help
 
 DESCRIPTION
-  Retrieve Seal that contains proofs. The proofs act as link to source of truth on various blockchains. The *orginal-file-name* will be suffixed with _seal.json This new file is used to poll for newer editions of the seal as blockchains heartbeats commit data.
+  Retrieve Seals as link to proofs on several blockchains
 ```
 
-_See code: [src/commands/retrieve.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/retrieve.ts)_
+_See code: [src/commands/retrieve.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/retrieve.ts)_
 
 ## `cw start`
 
 ```
 USAGE
   $ cw start
-
-OPTIONS
-  --stage=development|staging|production
 ```
 
-_See code: [src/commands/start.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/start.ts)_
+_See code: [src/commands/start.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/start.ts)_
 
 ## `cw verify`
 
@@ -160,13 +150,12 @@ USAGE
 
 OPTIONS
   -h, --help       show CLI help
-  -s, --seal=seal  Seal object
-  --hash=hash      Hash of document for which you want to prove integrity.
+  -s, --seal=seal  Verify hashes with Seals.
+  --hash=hash      Verify hashes with Seals.
 
 DESCRIPTION
-  Verify a document's integrity. The CLI will take a _seal.json file as input and confirm it hasBeenInsertedIntoAtLeastOneBlockchain. This command will automatically locate the 'original' document in the /docs folder with the same name. The document will be hashed and verified using the seal. If you change the 'original' document verifiy will return false.
+  Verify hash with Seal
 ```
 
-_See code: [src/commands/verify.ts](https://github.com/i001962/cw/blob/v0.0.0/src/commands/verify.ts)_
-
+_See code: [src/commands/verify.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/verify.ts)_
 <!-- commandsstop -->
