@@ -17,11 +17,11 @@ Cryptowerk CLI
 
 <!-- usage -->
 ```sh-session
-$ npm install -g cw
+$ npm install -g cryptowerk-cli
 $ cw COMMAND
 running command...
 $ cw (-v|--version|version)
-cw/0.0.1 darwin-x64 node-v10.16.3
+cryptowerk-cli/0.0.2 darwin-x64 node-v10.16.3
 $ cw --help [COMMAND]
 USAGE
   $ cw COMMAND
@@ -59,7 +59,7 @@ DESCRIPTION
      Visit http://developer.cryptowerk.com to register.
 ```
 
-_See code: [src/commands/config.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/config.ts)_
+_See code: [src/commands/config.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/config.ts)_
 
 ## `cw hash`
 
@@ -73,7 +73,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/hash.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/hash.ts)_
+_See code: [src/commands/hash.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/hash.ts)_
 
 ## `cw help [COMMAND]`
 
@@ -112,7 +112,7 @@ DESCRIPTION
        Us verify command for a link to proof.
 ```
 
-_See code: [src/commands/register.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/register.ts)_
+_See code: [src/commands/register.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/register.ts)_
 
 ## `cw retrieve`
 
@@ -129,7 +129,7 @@ DESCRIPTION
   Retrieve Seals as link to proofs on several blockchains
 ```
 
-_See code: [src/commands/retrieve.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/retrieve.ts)_
+_See code: [src/commands/retrieve.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/retrieve.ts)_
 
 ## `cw start`
 
@@ -138,7 +138,7 @@ USAGE
   $ cw start
 ```
 
-_See code: [src/commands/start.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/start.ts)_
+_See code: [src/commands/start.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/start.ts)_
 
 ## `cw verify`
 
@@ -157,5 +157,5 @@ DESCRIPTION
   Verify hash with Seal
 ```
 
-_See code: [src/commands/verify.ts](https://github.com/i001962/cw/blob/v0.0.1/src/commands/verify.ts)_
+_See code: [src/commands/verify.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/verify.ts)_
 <!-- commandsstop -->
