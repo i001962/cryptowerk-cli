@@ -1,7 +1,7 @@
 {
   "name": "cryptowerk-cli",
   "description": "Cryptowerk CLI",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "KMM @i001962",
   "bin": {
     "cw": "./bin/run"
