@@ -42,7 +42,10 @@
   ],
   "homepage": "https://github.com/i001962/cryptowerk-cli",
   "keywords": [
-    "oclif"
+    "oclif",
+    "cryptowerk",
+    "notary",
+    "blockchain"
   ],
   "license": "MIT",
   "main": "lib/index.js",

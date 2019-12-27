@@ -1,5 +1,6 @@
 # cryptowerk-cli
 
+Work in process - don't use npm to install (yet).
 Cryptowerk CLI
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
