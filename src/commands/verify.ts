@@ -85,7 +85,7 @@ export default class Verify extends Command {
             }
             console.log(seals);
             console.log(
-              `Verifying doc hash against seal. See above, Results below.`
+              `Verifying doc hash against seal details above. Results below.`
             );
             cwapi
               .verify(
@@ -95,7 +95,7 @@ export default class Verify extends Command {
                 process.env.ENDPOINT
               )
               .then((retval: any) => {
-                console.log(retval);
+                // console.log(retval);
                 console.log(
                   "Seal and hash verified: " +
                     JSON.stringify(retval.verificationResults[0].verified)
