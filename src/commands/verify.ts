@@ -40,12 +40,13 @@ export default class Verify extends Command {
         {
           type: "file-tree-selection",
           name: "file",
-          message: "choose a seal",
+          message: "Choose a *_seal.json file.",
           root: "docs", // hmm must exist
           onlyShowDir: false
         }
       ])
       .then(async answers => {
+        // TODO add check that _seal.json file was choosen
         console.log(answers.file);
         let len = answers.file.length;
         let res = answers.file.substr(0, len - 10);

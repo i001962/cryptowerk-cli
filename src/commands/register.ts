@@ -29,7 +29,7 @@ export default class Register extends Command {
     this.log(`Registering hash value ${hash}`);
     cwapi
       .register(hash, process.env.APIKEYS, process.env.ENDPOINT)
-      .then(retval => {
+      .then((retval: any) => {
         console.log("Register Hash returned: " + JSON.stringify(retval));
       });
   }

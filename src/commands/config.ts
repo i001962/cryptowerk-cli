@@ -27,8 +27,10 @@ export default class Config extends Command {
     const apiCred = await cli.prompt("What is your API Credential?", {
       type: "hide"
     });
-    const endPoint = await cli.prompt("What is your API endpoint?");
-
+    const endPoint = await cli.prompt(
+      "What is your API endpoint? Include training slash."
+    );
+    // TODO add test for training slash in endPoint
     this.log(`You entered: ${apiKey}, ${apiCred}`);
     const apiaccess = apiKey + " " + apiCred;
     fs.writeFile(
@@ -37,7 +39,7 @@ export default class Config extends Command {
       function(err) {
         if (err) throw err;
         console.log("File is created successfully.");
-        console.log(err);
+        // console.log(err);
       }
     );
   }

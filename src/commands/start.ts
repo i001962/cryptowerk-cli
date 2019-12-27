@@ -44,7 +44,7 @@ export class Start extends Command {
         await Hash.run();
         break;
       case "Config":
-        await Config.run(["-h"]);
+        await Config.run([]);
         break;
       case "Quit":
         await cli.url(

@@ -32,11 +32,13 @@ export default class Retrieve extends Command {
         {
           type: "file-tree-selection",
           name: "file",
-          message: "choose a json file (retrievalID) to poll for seal",
+          message: "Choose a _seal.json file to poll for seal",
+          onlyShowDir: false,
           root: "docs" // hmm must exist
         }
       ])
       .then(async answers => {
+        // TODO check that a file was selected with _seal.json suffix
         fs.readFile(answers.file, "utf8", function(err, contents) {
           let me = JSON.parse(contents);
           // console.log(me);
@@ -57,7 +59,7 @@ export default class Retrieve extends Command {
           }
           cwapi
             .retrieve(retrieval_Ids, process.env.APIKEYS, process.env.ENDPOINT)
-            .then(retval => {
+            .then((retval: any) => {
               console.dir("Retrieved these seals: " + JSON.stringify(retval));
               let lStr = answers.file;
               lStr = lStr.substring(lStr.lastIndexOf("/"));
@@ -71,6 +73,11 @@ export default class Retrieve extends Command {
               });
             });
         });
+      })
+      .catch(function() {
+        console.log(
+          "Something went wrong. Did you select a folder instead of a file?"
+        );
       });
   }
 }

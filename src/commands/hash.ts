@@ -48,7 +48,7 @@ export default class Hash extends Command {
             .then((retval: any) => {
               let me = retval;
               // console.log(JSON.stringify(me));
-              function listProducts(me) {
+              function listProducts(me: string | any[]) {
                 let product_names = [];
                 for (let i = 0; i < me.length; i += 1) {
                   product_names.push(me[i].retrievalId);
