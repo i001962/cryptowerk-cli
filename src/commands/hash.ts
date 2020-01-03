@@ -48,15 +48,15 @@ export default class Hash extends Command {
             .then((retval: any) => {
               let me = retval;
               // console.log(JSON.stringify(me));
-              function listProducts(me: string | any[]) {
-                let product_names = [];
+              function getRIds(me: string | any[]) {
+                let rIds = [];
                 for (let i = 0; i < me.length; i += 1) {
-                  product_names.push(me[i].retrievalId);
+                  rIds.push(me[i].retrievalId);
                   // console.log(me[i].retrievalId);
                 }
-                return product_names;
+                return rIds;
               }
-              // console.log(listProducts(me));
+              // console.log(getRIds(me));
               // console.log(answers.file);
               fs.writeFile(
                 answers.file + "_seal.json",

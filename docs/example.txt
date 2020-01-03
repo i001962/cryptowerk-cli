@@ -2,4 +2,4 @@ Put files in the /docs folder.
 
 Select a file to hash, register, retrieve seal and verify.
 Once registered a file with _seal.json suffix will contain the seal.
-You will want to Retrieve the seal via polling the api. 
+You will want to Retrieve the seal via polling the api.

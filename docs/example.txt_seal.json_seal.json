@@ -1,0 +1,47 @@
+{
+  "maxSupportedAPIVersion": 8,
+  "documents": [{
+    "retrievalId": "ri3172997cfa8dd2c43577a36ff2314ce475ce4547d9af81836894bb50a656811de",
+    "seal": {
+      "documentInfo": {
+        "submittedAt": 1578072961959
+      },
+      "proofs": [{
+        "bundleMethod": "BALANCED_MERKLE_TREE",
+        "operations": [{
+          "blockChainId": "0x6276b9fabd4a92a7c1467710553946414dba79f0ff5c62f335bcd939a3a9aa47",
+          "instanceName": "4",
+          "insertedIntoBlockchainAt": 1578073021963,
+          "opcode": "BLOCKCHAIN",
+          "blockchainGeneralName": "Ethereum"
+        }, {
+          "docHash": "f55ee24ec05b715e7855a93759b3d372c598a7be9f9e46ae8a090c3788452847",
+          "opcode": "DOC_SHA256"
+        }, {
+          "opcode": "APPEND_THEN_SHA256",
+          "hash": "9c81d330a82cc58dafdab97093d841f5fa8f92d77eac54d0f1a23b22c2d187a3"
+        }, {
+          "opcode": "ANCHOR_SHA256",
+          "hash": "62e20de24e2f1b87a4980d0486479b0797febd0877b0122089eb7b4b93f98723"
+        }]
+      }],
+      "version": 8,
+      "isComplete": false
+    },
+    "submittedAt": 1578072961959,
+    "hasBeenInsertedIntoAtLeastOneBlockchain": true,
+    "blockchainRegistrations": [{
+      "blockChainId": "0x6276b9fabd4a92a7c1467710553946414dba79f0ff5c62f335bcd939a3a9aa47",
+      "insertedIntoBlockchainAt": 1578073021963,
+      "blockChainDesc": {
+        "instanceName": "4",
+        "generalName": "Ethereum"
+      },
+      "status": {
+        "anchorHash": "62e20de24e2f1b87a4980d0486479b0797febd0877b0122089eb7b4b93f98723"
+      }
+    }],
+    "hasBeenInsertedIntoAllRequestedBlockchains": false
+  }],
+  "minSupportedAPIVersion": 1
+}
