@@ -1,167 +1,224 @@
 # cryptowerk-cli
 
-Work in process - don't use npm to install (yet).
-Cryptowerk CLI
+Cryptowerk CLI – blockchain notarization skill for AI agents.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/cw.svg)](https://npmjs.org/package/cw)
-[![Downloads/week](https://img.shields.io/npm/dw/cw.svg)](https://npmjs.org/package/cw)
-[![License](https://img.shields.io/npm/l/cw.svg)](https://github.com/i001962/cw/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/cryptowerk-cli.svg)](https://npmjs.org/package/cryptowerk-cli)
+[![License](https://img.shields.io/npm/l/cryptowerk-cli.svg)](https://github.com/i001962/cryptowerk-cli/blob/master/package.json)
+
+Hash documents, register them to multiple blockchains, retrieve cryptographic seal proofs, and verify document integrity — all via the [Cryptowerk](https://developer.cryptowerk.com) platform.
 
 <!-- toc -->
 
-- [cryptowerk-cli](#cryptowerk-cli)
+- [Installation](#installation)
 - [Usage](#usage)
 - [Commands](#commands)
-  <!-- tocstop -->
+- [Agent / Skill Usage](#agent--skill-usage)
 
-# Usage
+<!-- tocstop -->
+
+## Installation
+
+```sh-session
+$ npm install -g cryptowerk-cli
+$ cw --version
+$ cw --help
+```
+
+## Usage
 
 <!-- usage -->
 
 ```sh-session
-$ npm install -g cryptowerk-cli
-$ cw COMMAND
-running command...
-$ cw (-v|--version|version)
-cryptowerk-cli/0.0.2 darwin-x64 node-v10.16.3
-$ cw --help [COMMAND]
-USAGE
-  $ cw COMMAND
-...
+$ cw COMMAND [OPTIONS]
 ```
 
 <!-- usagestop -->
 
-# Commands
+## Commands
 
 <!-- commands -->
 
-- [`cw config`](#cw-config)
-- [`cw hash`](#cw-hash)
-- [`cw help [COMMAND]`](#cw-help-command)
-- [`cw register [HASH]`](#cw-register-hash)
-- [`cw retrieve`](#cw-retrieve)
-- [`cw start`](#cw-start)
-- [`cw verify`](#cw-verify)
+### `cw config`
 
-## `cw config`
-
-Prompts to Setup .env file for:
+Configure the `.env` file with Cryptowerk API credentials.
 
 ```
 USAGE
+  $ cw config [OPTIONS]
+
+OPTIONS
+  -h, --help            show CLI help
+  --api-key=KEY         Cryptowerk API key (non-interactive)
+  --api-cred=CRED       Cryptowerk API credential (non-interactive)
+  -e, --endpoint=URL    API endpoint URL with trailing slash (non-interactive)
+  --json                Output result as JSON
+
+EXAMPLES
+  # Interactive (prompts for credentials)
   $ cw config
 
-OPTIONS
-  -h, --help  show CLI help
-
-DESCRIPTION
-  Prompts to Setup .env file for:
-     APIKEY=
-     APICRED=
-     ENDPOINT= e.g. https://developers.cryptowerk.com/platform/API/v8/
-     Visit http://developer.cryptowerk.com to register.
+  # Non-interactive (agent mode)
+  $ cw config --api-key <KEY> --api-cred <CRED> --endpoint https://developers.cryptowerk.com/platform/API/v8/ --json
 ```
 
-_See code: [src/commands/config.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/config.ts)_
+### `cw hash`
 
-## `cw hash`
-
-Select a doc to hash and register
+Compute the SHA256 hash of a file, register it to blockchains, and save a `_seal.json` alongside it.
 
 ```
 USAGE
+  $ cw hash [OPTIONS]
+
+OPTIONS
+  -h, --help        show CLI help
+  -f, --file=FILE   Path to the file to hash and register (skips interactive picker)
+  --json            Output result as JSON
+
+EXAMPLES
+  # Interactive (file tree picker)
   $ cw hash
 
-OPTIONS
-  -h, --help  show CLI help
+  # Non-interactive (agent mode)
+  $ cw hash --file ./docs/contract.pdf --json
 ```
 
-_See code: [src/commands/hash.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/hash.ts)_
+### `cw register`
 
-## `cw help [COMMAND]`
-
-display help for cw
+Register a pre-computed SHA256 hash (or comma-separated list of hashes) to blockchains.
 
 ```
 USAGE
-  $ cw help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
+  $ cw register --hash HASH [OPTIONS]
 
 OPTIONS
-  --all  see all commands in CLI
+  -h, --help        show CLI help
+  -H, --hash=HASH   SHA256 hash(es) to register, comma-separated (required)
+  --json            Output result as JSON
+
+EXAMPLES
+  $ cw register --hash abc123def456 --json
+  $ cw register --hash abc123,def456 --json
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src/commands/help.ts)_
+### `cw retrieve`
 
-## `cw register [HASH]`
-
-Register hash(es) to several blockchains
+Poll the Cryptowerk API to retrieve blockchain seal proofs for previously registered hashes.
 
 ```
 USAGE
-  $ cw register [HASH]
+  $ cw retrieve [OPTIONS]
 
 OPTIONS
-  -h, --help   show CLI help
+  -h, --help                    show CLI help
+  -f, --file=FILE               Path to a _seal.json file (skips interactive picker)
+  -r, --retrieval-id=IDS        Comma-separated retrievalId(s) to poll
+  --json                        Output result as JSON
 
-  --hash=hash  Sha256 hash to register.
-               More than one hash? Seperate with comma no spaces.
-
-DESCRIPTION
-  Register hash(es) to several blockchains
-       and obtain retrievalID.
-       Us verify command for a link to proof.
-```
-
-_See code: [src/commands/register.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/register.ts)_
-
-## `cw retrieve`
-
-Retrieve Seals as link to proofs on several blockchains
-
-```
-USAGE
+EXAMPLES
+  # Interactive
   $ cw retrieve
 
-OPTIONS
-  -h, --help  show CLI help
+  # From a seal file (agent mode)
+  $ cw retrieve --file ./docs/contract.pdf_seal.json --json
 
-DESCRIPTION
-  Retrieve Seals as link to proofs on several blockchains
+  # From retrieval IDs directly
+  $ cw retrieve --retrieval-id <id1>,<id2> --json
 ```
 
-_See code: [src/commands/retrieve.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/retrieve.ts)_
+### `cw verify`
 
-## `cw start`
+Verify that a document's current SHA256 hash matches its blockchain seal.
+
+```
+USAGE
+  $ cw verify [OPTIONS]
+
+OPTIONS
+  -h, --help              show CLI help
+  -s, --seal-file=FILE    Path to the _seal.json file (skips interactive picker)
+  -d, --doc-file=FILE     Path to the original document (derived from seal file if omitted)
+  --json                  Output result as JSON
+
+EXAMPLES
+  # Interactive
+  $ cw verify
+
+  # Non-interactive (agent mode)
+  $ cw verify --seal-file ./docs/contract.pdf_seal.json --json
+```
+
+### `cw start`
+
+Launch an interactive menu to access all commands.
 
 ```
 USAGE
   $ cw start
 ```
 
-_See code: [src/commands/start.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/start.ts)_
+### `cw help [COMMAND]`
 
-## `cw verify`
-
-Verify hash with Seal
+Display help for a command.
 
 ```
 USAGE
-  $ cw verify
+  $ cw help [COMMAND]
 
 OPTIONS
-  -h, --help       show CLI help
-  -s, --seal=seal  Verify hashes with Seals.
-  --hash=hash      Verify hashes with Seals.
-
-DESCRIPTION
-  Verify hash with Seal
+  --all  show all commands
 ```
 
-_See code: [src/commands/verify.ts](https://github.com/i001962/cw/blob/v0.0.2/src/commands/verify.ts)_
-
 <!-- commandsstop -->
+
+## Agent / Skill Usage
+
+This CLI is designed to be used as a **skill by AI agents**. Every command supports:
+
+- **`--json` flag** — all output is structured JSON, making it easy for agents to parse results.
+- **Non-interactive flags** — bypass all `inquirer` prompts; pass file paths and IDs directly.
+- **`skill.json`** — an OpenAI-compatible tool definition file at the repo root, ready to register with any agent framework.
+
+### skill.json
+
+The `skill.json` file at the repo root describes all five tools in OpenAI function-calling format:
+
+```sh-session
+$ npm run skill   # prints skill.json to stdout
+```
+
+Load it into your agent with:
+
+```javascript
+const skill = require('./skill.json');
+// skill.tools is an array of OpenAI-compatible tool definitions
+```
+
+### Typical agent workflow
+
+```sh-session
+# 1. Configure credentials (once)
+$ cw config --api-key <KEY> --api-cred <CRED> \
+    --endpoint https://developers.cryptowerk.com/platform/API/v8/ --json
+
+# 2. Hash & register a document
+$ cw hash --file ./docs/contract.pdf --json
+# → { "file": "...", "hash": "...", "sealFile": "..._seal.json", "documents": [...] }
+
+# 3. Poll until the seal is anchored to the blockchain
+$ cw retrieve --file ./docs/contract.pdf_seal.json --json
+# → { "retrievalIds": [...], "result": { "documents": [...] } }
+
+# 4. Verify document integrity
+$ cw verify --seal-file ./docs/contract.pdf_seal.json --json
+# → { "docFile": "...", "sealFile": "...", "hash": "...", "verified": true }
+```
+
+### Environment variables
+
+All API configuration can also be supplied via environment variables (useful in CI/CD or agent runtimes):
+
+| Variable   | Description                                |
+|------------|--------------------------------------------|
+| `APIKEYS`  | `<api-key> <api-cred>` separated by a space |
+| `ENDPOINT` | API endpoint URL with trailing slash        |
