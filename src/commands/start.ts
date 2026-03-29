@@ -35,13 +35,13 @@ export class Start extends Command {
         await Register.run(["-h"]);
         break;
       case "Retrieve":
-        await Retrieve.run();
+        await Retrieve.run([]);
         break;
       case "Verify":
         await Verify.run([]);
         break;
       case "Hash & Register":
-        await Hash.run();
+        await Hash.run([]);
         break;
       case "Config":
         await Config.run([]);
