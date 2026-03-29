@@ -1,111 +1,150 @@
 import { Command, flags } from "@oclif/command";
-import cli from "cli-ux";
 var cwapi = require("../cwapiverify.js");
 import { resolve } from "path";
 import { config } from "dotenv";
 config({ path: resolve(__dirname, "../../.env") });
 import * as fs from "fs";
 const crypto = require("crypto");
-const hash = crypto.createHash("sha256");
 import * as inquirer from "inquirer";
 import inquirerFileTreeSelection = require("inquirer-file-tree-selection-prompt");
-import { string } from "@oclif/command/lib/flags";
 
 export default class Verify extends Command {
-  static description = `
-  Verify hash with Seal 
-`;
+  static description =
+    "Verify a document hash against its blockchain seal. " +
+    "Pass --seal-file and --doc-file to run non-interactively (agent/skill mode).";
+
   static flags = {
     help: flags.help({ char: "h" }),
-    seal: flags.string({
+    "seal-file": flags.string({
       char: "s",
-      description: `
-    Verify hashes with Seals.
-  `
+      description:
+        "Path to the _seal.json file. When provided with --doc-file, skips the interactive file picker."
     }),
-    hash: flags.string({
-      description: `
-  Verify hashes with Seals.
-`
+    "doc-file": flags.string({
+      char: "d",
+      description:
+        "Path to the original document to verify. If omitted, it is derived by stripping '_seal.json' from the seal file name."
+    }),
+    json: flags.boolean({
+      description: "Output result as JSON (machine-readable).",
+      default: false
     })
   };
 
   async run() {
-    const { args, flags } = this.parse(Verify);
-    const seal = flags.seal || "missing";
-    const hash = flags.hash || "missing";
-    inquirer.registerPrompt("file-tree-selection", inquirerFileTreeSelection);
-    inquirer
-      .prompt([
-        {
-          type: "file-tree-selection",
-          name: "file",
-          message: "Choose a *_seal.json file.",
-          root: "docs", // hmm must exist
-          onlyShowDir: false
-        }
-      ])
-      .then(async answers => {
-        // TODO add check that _seal.json file was choosen
-        console.log(answers.file);
-        let len = answers.file.length;
-        let res = answers.file.substr(0, len - 10);
-        console.log(res);
-        var fd = fs.createReadStream(res);
-        var hash = crypto.createHash("sha256");
-        hash.setEncoding("hex");
-        let checkthishash: never[] = [];
-        fd.on("end", function() {
-          hash.end();
-          checkthishash = hash.read(); // the desired sha256sum
-          console.dir(checkthishash);
-        });
+    const { flags: parsedFlags } = this.parse(Verify);
 
-        // read all file and pipe it (write it) to the hash object
-        fd.pipe(hash);
-
-        /* await Hash.run([
-          "--hash",
-          "19b1ec37bebdb7d2c9db0e95ff8dffdd9b6073edcd61a6ec4ec45ff1af41cfc3"
-        ]); */
-        fs.readFile(answers.file, "utf8", function(err, contents) {
-          let me = JSON.parse(contents);
-          // console.log(me);
-          let seals = [];
-          let res = JSON.stringify(me).substring(0, 1); // [ = rID, { = documents
-          // console.log(res);
-          // console.log(me.documents[0].hasBeenInsertedIntoAtLeastOneBlockchain);
-          if (
-            res === "{" &&
-            me.documents[0].hasBeenInsertedIntoAtLeastOneBlockchain
-          ) {
-            // change this hack -check for seal anchored true
-            for (let j = 0; j < me.documents.length; j += 1) {
-              seals.push(me.documents[j].seal);
-            }
-            console.log(seals);
-            console.log(
-              `Verifying doc hash against seal details above. Results below.`
-            );
-            cwapi
-              .verify(
-                seals,
-                checkthishash,
-                process.env.APIKEYS,
-                process.env.ENDPOINT
-              )
-              .then((retval: any) => {
-                // console.log(retval);
-                console.log(
-                  "Seal and hash verified: " +
-                    JSON.stringify(retval.verificationResults[0].verified)
-                );
-              })
-              .catch(function() {
-                console.log("verificationResults not found.");
-              });
-          } else console.log("Seal not ready. Have you retrieved it?");
+    if (parsedFlags["seal-file"]) {
+      const sealPath = parsedFlags["seal-file"] as string;
+      const docPath =
+        parsedFlags["doc-file"] || sealPath.replace(/_seal\.json$/, "");
+      await this.verifyFiles(sealPath, docPath, parsedFlags.json);
+    } else {
+      // Interactive mode
+      inquirer.registerPrompt("file-tree-selection", inquirerFileTreeSelection);
+      inquirer
+        .prompt([
+          {
+            type: "file-tree-selection",
+            name: "file",
+            message: "Choose a *_seal.json file.",
+            root: "docs",
+            onlyShowDir: false
+          }
+        ])
+        .then(async (answers: any) => {
+          const sealPath: string = answers.file;
+          const docPath = sealPath.replace(/_seal\.json$/, "");
+          await this.verifyFiles(sealPath, docPath, parsedFlags.json);
         });
+    }
+  }
+
+  private computeFileHash(filePath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const fd = fs.createReadStream(filePath);
+      const fileHash = crypto.createHash("sha256");
+      fileHash.setEncoding("hex");
+      fd.on("error", (err: Error) => reject(err));
+      fd.on("end", () => {
+        fileHash.end();
+        resolve(fileHash.read() as string);
       });
+      fd.pipe(fileHash);
+    });
+  }
+
+  private async verifyFiles(
+    sealPath: string,
+    docPath: string,
+    jsonOutput: boolean
+  ): Promise<void> {
+    let sealContents: string;
+    try {
+      sealContents = fs.readFileSync(sealPath, "utf8");
+    } catch (err) {
+      this.error(`Cannot read seal file "${sealPath}": ${(err as Error).message}`);
+      return;
+    }
+
+    let docHash: string;
+    try {
+      docHash = await this.computeFileHash(docPath);
+    } catch (err) {
+      this.error(`Cannot read document "${docPath}": ${(err as Error).message}`);
+      return;
+    }
+
+    const me = JSON.parse(sealContents);
+    const firstChar = JSON.stringify(me).substring(0, 1);
+
+    if (
+      firstChar !== "{" ||
+      !me.documents ||
+      !me.documents[0].hasBeenInsertedIntoAtLeastOneBlockchain
+    ) {
+      if (jsonOutput) {
+        this.log(JSON.stringify({ verified: false, reason: "Seal not ready. Have you retrieved it?" }));
+      } else {
+        this.log("Seal not ready. Have you retrieved it?");
+      }
+      return;
+    }
+
+    const seals: any[] = [];
+    for (let j = 0; j < me.documents.length; j++) {
+      seals.push(me.documents[j].seal);
+    }
+
+    try {
+      const retval = await cwapi.verify(
+        seals,
+        docHash,
+        process.env.APIKEYS,
+        process.env.ENDPOINT
+      );
+      const verified =
+        retval.verificationResults && retval.verificationResults[0]
+          ? retval.verificationResults[0].verified
+          : false;
+
+      if (jsonOutput) {
+        this.log(
+          JSON.stringify({
+            docFile: docPath,
+            sealFile: sealPath,
+            hash: docHash,
+            verified,
+            details: retval
+          })
+        );
+      } else {
+        this.log(`Document: ${docPath}`);
+        this.log(`Hash: ${docHash}`);
+        this.log(`Verified: ${verified}`);
+      }
+    } catch (err) {
+      this.error("Verification failed: " + err);
+    }
   }
 }

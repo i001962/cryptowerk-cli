@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "name": "cryptowerk-cli",
+  "display_name": "Cryptowerk Blockchain Notary",
+  "description": "Hash documents, register them to multiple blockchains, retrieve cryptographic seal proofs, and verify document integrity — all via the Cryptowerk platform.",
+  "version": "0.1.0",
+  "binary": "cw",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "cw_config",
+        "description": "Save Cryptowerk API credentials to the local .env config file. Must be called once before using other commands.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "api_key": {
+              "type": "string",
+              "description": "Cryptowerk API key."
+            },
+            "api_cred": {
+              "type": "string",
+              "description": "Cryptowerk API credential."
+            },
+            "endpoint": {
+              "type": "string",
+              "description": "Cryptowerk API endpoint URL including trailing slash, e.g. https://developers.cryptowerk.com/platform/API/v8/"
+            }
+          },
+          "required": ["api_key", "api_cred", "endpoint"]
+        },
+        "cli_template": "cw config --api-key {api_key} --api-cred {api_cred} --endpoint {endpoint} --json"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "cw_hash",
+        "description": "Compute the SHA256 hash of a local file, register it to multiple blockchains via Cryptowerk, and save a _seal.json file alongside it containing the retrievalId(s).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute or relative path to the file to hash and register."
+            }
+          },
+          "required": ["file"]
+        },
+        "cli_template": "cw hash --file {file} --json"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "cw_register",
+        "description": "Register one or more pre-computed SHA256 hash(es) to multiple blockchains via Cryptowerk. Returns retrievalId(s) that can be used to poll for the seal.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "hash": {
+              "type": "string",
+              "description": "SHA256 hash to register. For multiple hashes, separate with commas and no spaces, e.g. 'abc123,def456'."
+            }
+          },
+          "required": ["hash"]
+        },
+        "cli_template": "cw register --hash {hash} --json"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "cw_retrieve",
+        "description": "Poll the Cryptowerk API to retrieve the blockchain seal proof for a previously registered hash. The seal becomes available once the hash has been anchored to the blockchain (may take minutes to hours depending on the chain).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Path to the _seal.json file produced by cw_hash or cw_register. Mutually exclusive with retrieval_id."
+            },
+            "retrieval_id": {
+              "type": "string",
+              "description": "One or more retrievalIds separated by commas. Mutually exclusive with file."
+            }
+          }
+        },
+        "cli_template_file": "cw retrieve --file {file} --json",
+        "cli_template_id": "cw retrieve --retrieval-id {retrieval_id} --json"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "cw_verify",
+        "description": "Verify that a document's current SHA256 hash matches its blockchain seal, confirming the document has not been altered since registration.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "seal_file": {
+              "type": "string",
+              "description": "Path to the _seal.json file containing the retrieved blockchain seal."
+            },
+            "doc_file": {
+              "type": "string",
+              "description": "Path to the original document to verify. If omitted, derived by stripping '_seal.json' from the seal file path."
+            }
+          },
+          "required": ["seal_file"]
+        },
+        "cli_template": "cw verify --seal-file {seal_file} --doc-file {doc_file} --json"
+      }
+    }
+  ],
+  "workflow_example": [
+    "1. cw config --api-key <KEY> --api-cred <CRED> --endpoint <URL> --json",
+    "2. cw hash --file ./docs/contract.pdf --json   # produces ./docs/contract.pdf_seal.json",
+    "3. cw retrieve --file ./docs/contract.pdf_seal.json --json   # poll until seal is ready",
+    "4. cw verify --seal-file ./docs/contract.pdf_seal.json --json   # confirm integrity"
+  ]
+}
